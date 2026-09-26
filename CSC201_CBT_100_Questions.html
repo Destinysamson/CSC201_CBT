@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSC201 CBT — 100 Questions</title>
+<style>
+:root {
+  --bg:#f4f7fb; --card:#fff; --text:#172033; --muted:#687386;
+  --primary:#2457d6; --primary2:#173b99; --border:#dfe5ef;
+  --good:#16834b; --bad:#c83b4b; --shadow:0 10px 30px rgba(20,35,70,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button{font:inherit;cursor:pointer}
+.app{max-width:1050px;margin:auto;padding:22px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}
+.brand{font-weight:800;font-size:20px}
+.badge{font-size:13px;background:#eaf0ff;color:var(--primary2);padding:7px 11px;border-radius:999px;font-weight:700}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:26px}
+.hidden{display:none!important}
+h1{margin:0 0 10px;font-size:32px}
+h2{margin:0 0 12px}
+p{line-height:1.6}
+.center{text-align:center}
+.hero{padding:45px 25px}
+.btn{border:0;border-radius:12px;padding:13px 18px;font-weight:800;background:var(--primary);color:white}
+.btn:hover{background:var(--primary2)}
+.btn.secondary{background:#e9edf5;color:var(--text)}
+.btn.danger{background:#c83b4b}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+.submit-row{margin-top:12px}
+.submit-row .btn{width:100%}
+.course{border:2px solid var(--primary);background:#f3f6ff;padding:18px;border-radius:14px;margin:20px auto;max-width:420px}
+.instructions{text-align:left;max-width:700px;margin:20px auto}
+.instructions li{margin:10px 0}
+.timer{font-variant-numeric:tabular-nums;font-weight:900;font-size:24px;background:#111827;color:#fff;padding:9px 14px;border-radius:11px}
+.examhead{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:15px}
+.progress{height:8px;background:#e7ebf2;border-radius:99px;overflow:hidden;margin-bottom:20px}
+.progress>div{height:100%;background:var(--primary);width:0}
+.meta{display:flex;justify-content:space-between;color:var(--muted);font-size:14px;margin-bottom:9px}
+.question{font-size:22px;font-weight:800;line-height:1.4;margin:15px 0 20px}
+.option{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--border);border-radius:12px;padding:14px;margin:10px 0;background:#fff;transition:.15s}
+.option:hover{border-color:#9eb2e9;background:#f8faff}
+.option input{margin-top:4px;transform:scale(1.15)}
+.option.selected{border-color:var(--primary);background:#eef3ff}
+.grid{display:grid;grid-template-columns:repeat(10,1fr);gap:7px;margin-top:20px}
+.grid button{border:1px solid var(--border);background:white;border-radius:8px;padding:8px 0;font-weight:700}
+.grid button.current{background:var(--primary);color:#fff;border-color:var(--primary)}
+.grid button.answered{box-shadow:inset 0 -3px 0 var(--good)}
+.legend{font-size:12px;color:var(--muted);margin-top:8px}
+.score{font-size:58px;font-weight:900;margin:10px 0}
+.review{margin-top:20px}
+.review-item{border:1px solid var(--border);border-radius:14px;padding:16px;margin:12px 0;background:#fff}
+.review-item.correct{border-left:5px solid var(--good)}
+.review-item.wrong{border-left:5px solid var(--bad)}
+.small{font-size:13px;color:var(--muted)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.kpi{background:#f7f9fc;border:1px solid var(--border);padding:15px;border-radius:12px;text-align:center}
+.kpi strong{display:block;font-size:24px}
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px}
+.modal-box{background:#fff;border-radius:16px;max-width:380px;width:100%;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.modal-box p{margin:0 0 20px;font-size:16px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+.modal-actions .btn{padding:10px 16px}
+@media(max-width:650px) {
+ .app{padding:12px} .card{padding:18px} h1{font-size:27px}
+ .question{font-size:19px} .grid{grid-template-columns:repeat(5,1fr)}
+ .examhead{align-items:flex-start} .timer{font-size:19px}
+ .kpis{grid-template-columns:1fr} .actions{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">CSC201 CBT</div>
+    <div class="badge">100 Questions • 50:00</div>
+  </div>
+
+  <section id="home" class="card hero center">
+    <h1>Introduction to Computer Science</h1>
+    <p>Computer-Based Test — CSC201</p>
+    <div class="course"><strong>SELECT COURSE</strong><br><span style="font-size:25px">CSC201</span></div>
+    <button class="btn" onclick="showInstructions()">Continue</button>
+  </section>
+
+  <section id="instructions" class="card hidden">
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:18px">
+      <div style="background:#f4f6f8;border-bottom:1px solid var(--border);padding:13px 16px;font-weight:800;letter-spacing:.3px">
+        COMPUTER BASED TEST — EXAMINATION INSTRUCTIONS
+      </div>
+      <div class="instructions" style="padding:18px">
+        <p style="margin-top:0"><strong>CSC 201 — INTRODUCTION TO COMPUTER SCIENCE</strong></p>
+        <ol>
+          <li>This examination contains <strong>100 multiple-choice questions</strong>.</li>
+          <li>Each question has four options: <strong>A, B, C and D</strong>.</li>
+          <li><strong>Choose the answer that best suits the question.</strong></li>
+          <li>You are allowed <strong>50 minutes</strong> to complete the examination.</li>
+          <li>Use <strong>Next</strong> to proceed to the next question and <strong>Previous</strong> to return to the preceding question.</li>
+          <li>You may use the <strong>Question Grid</strong> to move directly to any question.</li>
+          <li>Your selected answer is retained when you move between questions.</li>
+          <li>Answered questions are indicated on the question grid.</li>
+          <li>You may review and change your answers before final submission.</li>
+          <li>When you have completed the examination, click <strong>SUBMIT EXAM</strong>.</li>
+          <li>Do not submit until you have reviewed your answers. After submission, answers cannot be changed.</li>
+          <li>When the allotted time expires, the system will <strong>automatically submit the examination</strong>.</li>
+          <li>Your score and question-by-question review will be displayed after submission.</li>
+        </ol>
+        <p style="margin-bottom:0"><strong>IMPORTANT:</strong> Read each question carefully before selecting your answer.</p>
+      </div>
+    </div>
+    <div class="center"><button class="btn" onclick="startExam()">START EXAM</button></div>
+  </section>
+
+  <section id="exam" class="hidden">
+    <div class="card">
+      <div class="examhead">
+        <div><strong id="chapter"></strong><div class="small" id="counter"></div></div>
+        <div id="timer" class="timer">50:00</div>
+      </div>
+      <div class="progress"><div id="progress"></div></div>
+      <div class="meta"><span id="answeredText">0 answered</span><span>50:00 total</span></div>
+      <div id="question" class="question"></div>
+      <div id="options"></div>
+
+      <div class="actions">
+        <button class="btn secondary" onclick="previousQuestion()">← PREVIOUS</button>
+        <button class="btn secondary" onclick="nextQuestion()">NEXT →</button>
+      </div>
+      <div class="submit-row">
+        <button class="btn danger" onclick="submitExam(false)">SUBMIT EXAM</button>
+      </div>
+
+      <hr style="border:0;border-top:1px solid var(--border);margin:25px 0 16px">
+      <strong>QUESTION GRID</strong>
+      <div id="grid" class="grid"></div>
+      <div class="legend">Blue = current question • Green line = answered</div>
+    </div>
+  </section>
+
+  <section id="result" class="card hidden center">
+    <h1>RESULT</h1>
+    <p>Your CSC201 CBT has been submitted.</p>
+    <div id="score" class="score">0%</div>
+    <div class="kpis">
+      <div class="kpi"><strong id="correctKpi">0</strong>Correct</div>
+      <div class="kpi"><strong id="wrongKpi">0</strong>Wrong</div>
+      <div class="kpi"><strong id="unansweredKpi">0</strong>Unanswered</div>
+    </div>
+    <p id="resultMessage"></p>
+    <div class="actions">
+      <button class="btn secondary" onclick="restartExam()">RETAKE EXAM</button>
+      <button class="btn" onclick="showReview()">REVIEW ANSWERS</button>
+    </div>
+    <div id="review" class="review hidden"></div>
+  </section>
+</div>
+
+<div id="modalOverlay" class="modal-overlay hidden">
+  <div class="modal-box">
+    <p id="modalMessage"></p>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [{"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q1", "question": "Which statement most closely defines Computer Science?", "options": ["The study of computers, computational processes and problem solving", "The study of computer monitors only", "The study of electricity without computational applications", "The operation of office equipment without programming"], "answer": 0}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q2", "question": "Computer Science is distinguished from merely using computers because it includes the study of:", "options": ["Typing speed only", "Computational principles, algorithms, systems and applications", "Electrical wiring alone", "Commercial use of calculators"], "answer": 1}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q3", "question": "Which statement best describes the relationship between Computer Science and problem solving?", "options": ["Computer Science eliminates the need to define problems", "Computer Science deals only with already-solved problems", "Computational methods can be used to formulate and solve problems systematically", "Problem solving is unrelated to computation"], "answer": 1}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q4", "question": "Which area is primarily concerned with the interaction between humans and computer systems?", "options": ["Compiler construction", "Numerical analysis", "Database administration", "Human-Computer Interaction"], "answer": 0}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q5", "question": "A field concerned with the organization, storage, retrieval and management of information is best associated with:", "options": ["Information management", "Computer graphics", "Robotics", "Computer architecture"], "answer": 2}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q6", "question": "Which area is most directly concerned with creating and manipulating visual representations using computers?", "options": ["Software engineering", "Computer graphics and visualization", "Information management", "Computer security"], "answer": 1}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q7", "question": "Software engineering is primarily concerned with:", "options": ["Repairing damaged keyboards", "Increasing monitor brightness", "Systematic development and maintenance of software", "Converting decimal numbers to binary"], "answer": 3}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q8", "question": "Which of the following is most closely associated with the development of systems that can exhibit intelligent behaviour?", "options": ["Data entry", "Word processing", "Computer networking", "Artificial intelligence"], "answer": 0}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q9", "question": "The historical development of computing demonstrates a movement from mainly mechanical devices toward:", "options": ["Electronic and increasingly sophisticated computing systems", "Exclusively manual calculation", "Non-programmable abacuses", "Paper-only information processing"], "answer": 1}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q10", "question": "Which early calculating device is associated with John Napier?", "options": ["Pascaline", "Napier's Bones", "Difference Engine", "ENIAC"], "answer": 1}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q11", "question": "Blaise Pascal is historically associated with the development of the:", "options": ["Analytical Engine", "Mark I", "Pascaline", "Punched-card tabulator"], "answer": 1}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q12", "question": "Gottfried Leibniz is associated with the development of the:", "options": ["Difference Engine", "Pascaline", "Hollerith machine", "Leibniz calculator"], "answer": 2}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q13", "question": "Charles Babbage's importance in computing history is particularly associated with the:", "options": ["Difference Engine and Analytical Engine", "ENIAC and UNIVAC", "Transistor and integrated circuit", "Keyboard and mouse"], "answer": 0}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q14", "question": "The Analytical Engine is historically important because it contained concepts resembling:", "options": ["Only mechanical gears", "Modern programmable computer principles", "Modern touch screens", "Modern optical scanners"], "answer": 0}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q15", "question": "Herman Hollerith's punched-card system is significant because punched cards were used for:", "options": ["Displaying graphics", "Producing sound", "Processing and tabulating data", "Controlling a computer mouse"], "answer": 1}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q16", "question": "Which historical development most directly demonstrates the use of punched cards for data processing?", "options": ["Hollerith's tabulating system", "Pascaline", "Napier's Bones", "Leibniz calculator"], "answer": 1}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q17", "question": "The historical development of computers is important to Computer Science because it shows how:", "options": ["Computers became less useful over time", "Computational technology evolved through successive innovations", "Programming became unnecessary", "Manual calculation replaced electronic computation"], "answer": 1}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q18", "question": "Which statement best distinguishes an early mechanical calculator from a modern computer?", "options": ["The mechanical calculator necessarily used binary electronic circuits", "The modern computer cannot perform arithmetic", "The modern computer can execute stored instructions and perform many classes of tasks", "Both operate only through manual manipulation"], "answer": 0}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q19", "question": "Which of the following is a field within Computer Science rather than a historical calculating device?", "options": ["Napier's Bones", "Pascaline", "Analytical Engine", "Computer security"], "answer": 0}, {"chapter": "CHAPTER 1: Introduction to Computer Science", "source": "Q20", "question": "A question concerning the development of computing from early calculating devices to modern systems primarily deals with:", "options": ["Computer history and development", "Keyboard shortcuts", "BASIC operators", "Number-system complements"], "answer": 3}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q21", "question": "Which statement best describes the function of a computer keyboard?", "options": ["It produces printed output directly", "It allows users to enter characters and commands", "It stores programs permanently", "It converts paper documents into images"], "answer": 2}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q22", "question": "Keyboard function keys are primarily provided to:", "options": ["Perform predefined or application-dependent functions", "Display printed documents", "Scan magnetic ink", "Measure temperature"], "answer": 2}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q23", "question": "Which group of keys forms the main typing area of a standard keyboard?", "options": ["Numeric keypad", "Function-key row", "Alphanumeric keys", "Cursor-control keys"], "answer": 0}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q24", "question": "A keyboard with a separate numeric keypad is especially useful when the user frequently enters:", "options": ["Photographs", "Audio signals", "Handwritten signatures", "Numerical data"], "answer": 1}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q25", "question": "Which device is specifically designed to control the position of a pointer on a computer display?", "options": ["Mouse", "Scanner", "MICR reader", "Printer"], "answer": 1}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q26", "question": "A joystick differs from a conventional mouse mainly because it is particularly suited to:", "options": ["Reading magnetic characters", "Controlling movement or direction interactively", "Producing printed output", "Scanning documents"], "answer": 1}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q27", "question": "Which input device uses a pen-like instrument to interact directly with a display surface?", "options": ["Mouse", "Keyboard", "Light pen", "Barcode reader"], "answer": 1}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q28", "question": "A light pen is primarily associated with:", "options": ["Magnetic data recognition", "Direct selection or pointing on a screen", "Printing graphics", "Reading punched cards"], "answer": 1}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q29", "question": "Which device is most appropriate for converting a physical document or photograph into a digital image?", "options": ["Scanner", "Joystick", "Keyboard", "Speaker"], "answer": 1}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q30", "question": "A flatbed scanner differs from a handheld scanner principally in the manner in which:", "options": ["The document is positioned and scanned", "Binary data is represented", "Characters are stored in RAM", "Output is printed"], "answer": 1}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q31", "question": "Which device is specifically designed to read characters printed with magnetizable ink?", "options": ["OCR", "OMR", "MICR", "Barcode reader"], "answer": 1}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q32", "question": "The principal purpose of OCR is to:", "options": ["Recognize printed characters and convert them into machine-readable text", "Read magnetic ink on cheques", "Detect joystick movement", "Print scanned images"], "answer": 0}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q33", "question": "OMR is particularly appropriate where information is represented by:", "options": ["Magnetic ink characters", "Marked positions or shaded areas on specially prepared forms", "Handwritten paragraphs", "Keyboard commands"], "answer": 0}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q34", "question": "A barcode reader is designed primarily to:", "options": ["Recognize patterns encoded as bars", "Recognize human speech", "Read magnetic characters", "Display graphical images"], "answer": 1}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q35", "question": "Which pair is correctly matched?", "options": ["MICR — marked examination bubbles", "OMR — magnetic ink", "OCR — printed-character recognition", "Barcode reader — keyboard input"], "answer": 0}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q36", "question": "Which device would be most directly associated with capturing drawings or coordinates from a surface?", "options": ["Digitizer", "Speaker", "Printer", "MICR"], "answer": 2}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q37", "question": "Which statement correctly distinguishes OCR from OMR?", "options": ["OCR recognizes characters, whereas OMR detects marked positions", "OCR detects marks, whereas OMR reads magnetic ink", "OCR produces sound, whereas OMR produces images", "OCR is an output device, whereas OMR is storage"], "answer": 0}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q38", "question": "Which input technology is particularly suitable for processing bank cheques containing specially printed characters?", "options": ["OMR", "MICR", "Joystick", "Light pen"], "answer": 0}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q39", "question": "A device that captures information from a document without requiring the user to type every character manually is generally functioning as a:", "options": ["Printer", "Scanner/input device", "Speaker", "Projector"], "answer": 1}, {"chapter": "CHAPTER 2: Input Devices", "source": "Q40", "question": "Which of the following is NOT primarily an input device?", "options": ["Keyboard", "Mouse", "Scanner", "Printer"], "answer": 1}, {"chapter": "CHAPTER 3: Programming Languages & Computer Generations", "source": "Q41", "question": "The first generation of programming languages is represented by:", "options": ["Machine language", "Assembly language", "High-level language", "Fourth-generation language"], "answer": 0}, {"chapter": "CHAPTER 3: Programming Languages & Computer Generations", "source": "Q42", "question": "The second generation of programming languages is most closely associated with:", "options": ["BASIC", "Assembly language", "Pascal", "Artificial intelligence languages"], "answer": 1}, {"chapter": "CHAPTER 3: Programming Languages & Computer Generations", "source": "Q43", "question": "Which pair is correctly associated with third-generation programming languages?", "options": ["Machine code and binary", "Assembly and mnemonic codes", "Pascal and FORTRAN", "Machine code and assembly"], "answer": 0}, {"chapter": "CHAPTER 3: Programming Languages & Computer Generations", "source": "Q44", "question": "Which statement correctly describes the progression of programming languages?", "options": ["They moved from high-level languages to binary codes", "They moved from machine-oriented forms toward more human-oriented forms", "They eliminated the need for translators", "They became increasingly dependent on manual calculation"], "answer": 0}, {"chapter": "CHAPTER 3: Programming Languages & Computer Generations", "source": "Q45", "question": "The generation of programming language that uses binary instructions directly understood by the computer is the:", "options": ["First generation", "Second generation", "Third generation", "Fifth generation"], "answer": 3}, {"chapter": "CHAPTER 3: Programming Languages & Computer Generations", "source": "Q46", "question": "Which sequence correctly represents the first three programming-language generations?", "options": ["High-level → machine → assembly", "Assembly → high-level → machine", "Machine → assembly → high-level", "Machine → high-level → assembly"], "answer": 1}, {"chapter": "CHAPTER 3: Programming Languages & Computer Generations", "source": "Q47", "question": "Which statement correctly distinguishes machine language from assembly language?", "options": ["Assembly uses symbolic or mnemonic instructions whereas machine language uses binary code", "Machine language requires an assembler while assembly requires none", "Assembly is a high-level language", "Machine language is easier to write than assembly"], "answer": 0}, {"chapter": "CHAPTER 3: Programming Languages & Computer Generations", "source": "Q48", "question": "The major purpose of an assembler is to:", "options": ["Convert source code into machine-understandable instructions", "Convert binary into decimal", "Print the program", "Scan source documents"], "answer": 0}, {"chapter": "CHAPTER 3: Programming Languages & Computer Generations", "source": "Q49", "question": "The first generation of computers was characterized principally by the use of:", "options": ["Integrated circuits", "Microprocessors", "Vacuum tubes", "Artificial intelligence"], "answer": 1}, {"chapter": "CHAPTER 3: Programming Languages & Computer Generations", "source": "Q50", "question": "Which technology is most strongly associated with the second generation of computers?", "options": ["Vacuum tubes", "Transistors", "Microprocessors", "Artificial intelligence"], "answer": 1}, {"chapter": "CHAPTER 3: Programming Languages & Computer Generations", "source": "Q51", "question": "Integrated circuits are associated with which generation of computers?", "options": ["First", "Second", "Third", "Fifth"], "answer": 2}, {"chapter": "CHAPTER 3: Programming Languages & Computer Generations", "source": "Q52", "question": "The fourth generation of computers is strongly associated with:", "options": ["Vacuum tubes", "Transistors", "Integrated circuits only", "Microprocessors"], "answer": 2}, {"chapter": "CHAPTER 3: Programming Languages & Computer Generations", "source": "Q53", "question": "Which progression correctly matches computer generations with their major technologies?", "options": ["Vacuum tubes → transistors → integrated circuits → microprocessors", "Transistors → vacuum tubes → microprocessors → integrated circuits", "Integrated circuits → vacuum tubes → transistors → microprocessors", "Microprocessors → integrated circuits → transistors → vacuum tubes"], "answer": 1}, {"chapter": "CHAPTER 3: Programming Languages & Computer Generations", "source": "Q54", "question": "A major characteristic of first-generation computers was their:", "options": ["Very small physical size", "Reliance on vacuum tubes and comparatively large physical size", "Use of microprocessors", "Use of artificial intelligence"], "answer": 1}, {"chapter": "CHAPTER 3: Programming Languages & Computer Generations", "source": "Q55", "question": "Which statement about computer generations is most appropriate?", "options": ["Each generation necessarily abandoned all technology of earlier generations", "Computer generations are distinguished largely by major technological developments", "Fifth-generation computers were the first computers ever constructed", "First-generation computers used microprocessors"], "answer": 1}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q56", "question": "The most basic unit of information in a digital computer is the:", "options": ["Byte", "Bit", "Word", "Kilobyte"], "answer": 1}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q57", "question": "A bit can represent:", "options": ["Only one of two states", "Eight independent characters", "Sixteen hexadecimal symbols simultaneously", "Any decimal number without encoding"], "answer": 0}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q58", "question": "One byte consists of:", "options": ["2 bits", "4 bits", "8 bits", "16 bits"], "answer": 2}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q59", "question": "A byte can represent a single character because:", "options": ["A character can be represented using a collection of bits", "Every character is physically stored as a keyboard", "Bytes are larger than words by definition", "A byte is an output device"], "answer": 1}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q60", "question": "Which statement correctly distinguishes a bit from a byte?", "options": ["A bit contains eight bytes", "A byte is a single binary digit", "A bit is a binary digit, while a byte is a collection of eight bits", "They are exactly the same unit"], "answer": 3}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q61", "question": "Which number system has radix 2?", "options": ["Binary", "Octal", "Decimal", "Hexadecimal"], "answer": 0}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q62", "question": "Which set contains only valid hexadecimal symbols?", "options": ["0–7 only", "0–9 and A–F", "0–1 and A–B", "1–16"], "answer": 0}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q63", "question": "The decimal value represented by hexadecimal digit F is:", "options": ["10", "12", "15", "16"], "answer": 0}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q64", "question": "Which digit cannot occur in an octal number?", "options": ["6", "7", "4", "8"], "answer": 1}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q65", "question": "The rightmost digit in a positional number is referred to as the:", "options": ["Most Significant Digit", "Least Significant Digit", "Most Significant Bit only", "Radix"], "answer": 1}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q66", "question": "The leftmost digit in a positional number is the:", "options": ["Least Significant Digit", "Radix", "Most Significant Digit", "Remainder"], "answer": 1}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q67", "question": "What is the main purpose of writing a radix as a subscript?", "options": ["To identify the number system being used", "To increase the value of the number", "To indicate the number of bits", "To identify the computer generation"], "answer": 0}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q68", "question": "To convert a decimal integer to binary using repeated division, the number is repeatedly divided by:", "options": ["10", "16", "8", "2"], "answer": 1}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q69", "question": "In repeated-division conversion from decimal to binary, the remainders are finally read:", "options": ["From top to bottom", "From bottom to top", "From left to right only", "In alphabetical order"], "answer": 1}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q70", "question": "The binary equivalent of 39 (base 10) is:", "options": ["100111 (base 2)", "101001 (base 2)", "110011 (base 2)", "111001 (base 2)"], "answer": 0}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q71", "question": "To convert a decimal integer to octal using repeated division, the number is repeatedly divided by:", "options": ["2", "10", "8", "16"], "answer": 1}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q72", "question": "The octal equivalent of 3714 (base 10) is:", "options": ["7028 (base 8)", "7202 (base 8)", "7270 (base 8)", "7028 (base 16)"], "answer": 1}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q73", "question": "In decimal-to-hexadecimal conversion, repeated division is performed by:", "options": ["2", "8", "10", "16"], "answer": 1}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q74", "question": "The hexadecimal equivalent of 26 (base 10) is:", "options": ["1A (base 16)", "2A (base 16)", "A1 (base 16)", "16 (base 16)"], "answer": 0}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q75", "question": "The hexadecimal equivalent of 447 (base 10) is:", "options": ["1BF (base 16)", "1FB (base 16)", "BF1 (base 16)", "2BF (base 16)"], "answer": 0}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q76", "question": "In positional number representation, the value contributed by a digit depends on:", "options": ["Only the digit's colour", "Its position and the radix", "The computer generation", "The programming language"], "answer": 1}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q77", "question": "Which operation is fundamental when converting a binary number to decimal?", "options": ["Adding the digits without positional weights", "Multiplying each digit by the appropriate power of the radix", "Reversing all digits", "Dividing repeatedly by 16"], "answer": 0}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q78", "question": "Which statement correctly describes binary addition?", "options": ["1 + 1 = 10 (base 2)", "1 + 1 = 1 (base 2)", "0 + 0 = 1 (base 2)", "1 + 0 = 2 (base 2)"], "answer": 0}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q79", "question": "In binary arithmetic, when a column produces a value of 2, the result is written as:", "options": ["2 in that column with no carry", "0 with a carry of 1", "1 with a carry of 2", "0 with no carry"], "answer": 1}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q80", "question": "Which operation is particularly useful for representing negative binary numbers in computer systems?", "options": ["Decimal-to-octal conversion", "Binary multiplication", "Complement representation", "ASCII encoding"], "answer": 1}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q81", "question": "The primary purpose of ASCII is to:", "options": ["Represent characters using numerical codes", "Convert decimal integers to octal", "Control the keyboard mechanically", "Calculate square roots"], "answer": 1}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q82", "question": "Which statement best describes ASCII?", "options": ["It is a character-coding scheme", "It is a programming language", "It is a computer generation", "It is an input device"], "answer": 2}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q83", "question": "BCD is primarily concerned with representing:", "options": ["Each decimal digit using a binary representation", "Computer programs using English sentences", "Sound signals using analogue waves", "Keyboard commands using mnemonics"], "answer": 1}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q84", "question": "EBCDIC is associated with:", "options": ["A character-coding scheme", "A flowchart symbol", "A number-system conversion algorithm", "An input device"], "answer": 2}, {"chapter": "CHAPTER 4: Data Representation", "source": "Q85", "question": "Why are data representation schemes necessary in digital computers?", "options": ["Computers must represent information in forms that their digital circuitry can process", "Computers cannot process numbers", "Computers only store photographs", "Representation eliminates binary arithmetic"], "answer": 2}, {"chapter": "CHAPTER 5: Algorithms & Flowcharts", "source": "Q86", "question": "A good algorithm should be:", "options": ["Ambiguous and indefinite", "Correct, definite and finite", "Infinitely long", "Dependent on human guesswork"], "answer": 1}, {"chapter": "CHAPTER 5: Algorithms & Flowcharts", "source": "Q87", "question": "Which property of an algorithm requires that its instructions be clearly stated without ambiguity?", "options": ["Termination", "Definiteness", "Portability", "Documentation"], "answer": 1}, {"chapter": "CHAPTER 5: Algorithms & Flowcharts", "source": "Q88", "question": "If an algorithm continues indefinitely without reaching a specified end, it violates the requirement of:", "options": ["Correctness", "Sequence", "Termination", "Selection"], "answer": 3}, {"chapter": "CHAPTER 5: Algorithms & Flowcharts", "source": "Q89", "question": "Which three components constitute the basic structures of an algorithm?", "options": ["Input, Output and Storage", "Sequence, Selection and Iteration", "Compile, Execute and Print", "Read, Write and Save"], "answer": 1}, {"chapter": "CHAPTER 5: Algorithms & Flowcharts", "source": "Q90", "question": "An algorithm that executes instructions in the exact order in which they are specified demonstrates:", "options": ["Selection", "Iteration", "Sequence", "Debugging"], "answer": 1}, {"chapter": "CHAPTER 5: Algorithms & Flowcharts", "source": "Q91", "question": "Choosing between alternative instructions based on whether a condition is satisfied represents:", "options": ["Selection", "Sequence", "Documentation", "Compilation"], "answer": 1}, {"chapter": "CHAPTER 5: Algorithms & Flowcharts", "source": "Q92", "question": "Repeating a set of instructions either for a specified number of times or while a condition holds represents:", "options": ["Selection", "Iteration", "Compilation", "Documentation"], "answer": 1}, {"chapter": "CHAPTER 5: Algorithms & Flowcharts", "source": "Q93", "question": "Which two methods are commonly used to represent the design of an algorithm?", "options": ["BASIC and FORTRAN", "Pseudocode and flowchart", "Compiler and interpreter", "Keyboard and mouse"], "answer": 1}, {"chapter": "CHAPTER 5: Algorithms & Flowcharts", "source": "Q94", "question": "Pseudocode is best described as:", "options": ["Executable machine language", "An English-like representation of an algorithm", "A computer hardware component", "A binary character code"], "answer": 0}, {"chapter": "CHAPTER 5: Algorithms & Flowcharts", "source": "Q95", "question": "Why can pseudocode not normally be executed directly by a computer?", "options": ["It is not an actual programming language", "It contains too many numbers", "It is always written in binary", "It is a type of hardware"], "answer": 0}, {"chapter": "CHAPTER 5: Algorithms & Flowcharts", "source": "Q96", "question": "A flowchart is best defined as:", "options": ["A graphical or pictorial representation of an algorithm", "A collection of machine instructions", "A character-coding scheme", "A programming-language translator"], "answer": 1}, {"chapter": "CHAPTER 5: Algorithms & Flowcharts", "source": "Q97", "question": "Which of the following is a good rule when drawing a flowchart?", "options": ["Cross flow lines whenever possible", "Avoid crossing flow lines", "Never use standard symbols", "Place all symbols together without direction"], "answer": 1}, {"chapter": "CHAPTER 5: Algorithms & Flowcharts", "source": "Q98", "question": "Which of the following is NOT a type of program flowchart?", "options": ["Sequential flowchart", "Branched/Selection flowchart", "Loop/Repetition flowchart", "Binary conversion flowchart"], "answer": 0}, {"chapter": "CHAPTER 5: Algorithms & Flowcharts", "source": "Q99", "question": "In an algorithm for finding the larger of two numbers, which condition would be used to determine whether A is larger than B?", "options": ["A < B", "A = 0", "A > B", "B = 0"], "answer": 0}, {"chapter": "CHAPTER 5: Algorithms & Flowcharts", "source": "Q100", "question": "In an algorithm that generates integers from 1 to 100 and computes their sum, which operation allows the repetition to progress through the integers?", "options": ["Resetting the counter to zero after every iteration", "Decreasing the counter after each iteration", "Incrementing the counter after each iteration", "Removing the counter completely"], "answer": 0}];
+let current = 0;
+let answers = Array(QUESTIONS.length).fill(null);
+let seconds = 50 * 60;
+let timerHandle = null;
+let submitted = false;
+
+function $(id) { return document.getElementById(id); }
+
+function showModal(message, buttons) {
+  $('modalMessage').textContent = message;
+  $('modalActions').innerHTML = '';
+  buttons.forEach(b => {
+    const btn = document.createElement('button');
+    btn.className = 'btn' + (b.secondary ? ' secondary' : '');
+    btn.textContent = b.label;
+    btn.onclick = () => { $('modalOverlay').classList.add('hidden'); b.action(); };
+    $('modalActions').appendChild(btn);
+  });
+  $('modalOverlay').classList.remove('hidden');
+}
+
+function showAlert(message) {
+  showModal(message, [{ label: 'OK', action: () => {} }]);
+}
+
+function showInstructions() {
+  $('home').classList.add('hidden');
+  $('instructions').classList.remove('hidden');
+}
+
+function startExam() {
+  $('instructions').classList.add('hidden');
+  $('result').classList.add('hidden');
+  $('exam').classList.remove('hidden');
+  current = 0; seconds = 50 * 60; submitted = false;
+  answers = Array(QUESTIONS.length).fill(null);
+  render();
+  clearInterval(timerHandle);
+  timerHandle = setInterval(tick, 1000);
+}
+
+function tick() {
+  seconds--;
+  updateTimer();
+  if (seconds <= 0) submitExam(true);
+}
+
+function updateTimer() {
+  const m = Math.floor(seconds / 60).toString().padStart(2,'0');
+  const s = (seconds % 60).toString().padStart(2,'0');
+  $('timer').textContent = `${m}:${s}`;
+  $('timer').style.background = seconds <= 300 ? '#b42335' : '#111827';
+}
+
+function render() {
+  const q = QUESTIONS[current];
+  $('chapter').textContent = q.chapter;
+  $('counter').textContent = `Question ${current+1} of ${QUESTIONS.length}`;
+  $('question').textContent = `${current+1}. ${q.question}`;
+  $('progress').style.width = `${((current+1)/QUESTIONS.length)*100}%`;
+  const letters = ['A','B','C','D'];
+  $('options').innerHTML = q.options.map((opt,i) => `
+    <label class="option ${answers[current]===i?'selected':''}">
+      <input type="radio" name="answer" value="${i}" ${answers[current]===i?'checked':''}
+        onchange="selectAnswer(${i})">
+      <span><strong>(${letters[i]})</strong> ${escapeHtml(opt)}</span>
+    </label>`).join('');
+  $('answeredText').textContent = `${answers.filter(x=>x!==null).length} answered`;
+  renderGrid();
+  updateTimer();
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+}
+
+function selectAnswer(i) {
+  answers[current] = i;
+  render();
+}
+
+function nextQuestion() {
+  if (current < QUESTIONS.length-1) { current++; render(); }
+  else { showAlert('You are on Question 100. Click SUBMIT when you are ready.'); }
+}
+
+function previousQuestion() {
+  if (current > 0) { current--; render(); }
+}
+
+function renderGrid() {
+  $('grid').innerHTML = QUESTIONS.map((q,i) =>
+    `<button class="${i===current?'current ':''}${answers[i]!==null?'answered':''}" onclick="jumpTo(${i})">${i+1}</button>`
+  ).join('');
+}
+
+function jumpTo(i) { current=i; render(); }
+
+function submitExam(autoSubmit) {
+  if (submitted) return;
+  if (!autoSubmit) {
+    const unanswered = answers.filter(x=>x===null).length;
+    const msg = unanswered
+      ? `You still have ${unanswered} unanswered question(s). Submit anyway?`
+      : 'Submit your exam now?';
+    showModal(msg, [
+      { label: 'Cancel', secondary: true, action: () => {} },
+      { label: 'Submit', action: () => finalizeSubmit(autoSubmit) }
+    ]);
+    return;
+  }
+  finalizeSubmit(autoSubmit);
+}
+
+function finalizeSubmit(autoSubmit) {
+  submitted = true;
+  clearInterval(timerHandle);
+
+  let correct=0;
+  QUESTIONS.forEach((q,i)=>{ if(answers[i]===q.answer) correct++; });
+  const wrong = answers.filter((a,i)=>a!==null && a!==QUESTIONS[i].answer).length;
+  const unanswered = answers.filter(a=>a===null).length;
+  const pct = Math.round((correct/QUESTIONS.length)*100);
+
+  $('exam').classList.add('hidden');
+  $('result').classList.remove('hidden');
+  $('score').textContent = `${pct}%`;
+  $('correctKpi').textContent = correct;
+  $('wrongKpi').textContent = wrong;
+  $('unansweredKpi').textContent = unanswered;
+  $('resultMessage').textContent = autoSubmit
+    ? 'Time expired. Your answers were submitted automatically.'
+    : 'Your answers have been recorded. Review the questions below.';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showReview() {
+  const letters=['A','B','C','D'];
+  const box=$('review');
+  box.classList.remove('hidden');
+  box.innerHTML=QUESTIONS.map((q,i)=>{
+    const user=answers[i];
+    const ok=user===q.answer;
+    const userText=user===null?'Unanswered':`(${letters[user]}) ${escapeHtml(q.options[user])}`;
+    const correctText=`(${letters[q.answer]}) ${escapeHtml(q.options[q.answer])}`;
+    return `<div class="review-item ${ok?'correct':'wrong'}"><strong>Question ${i+1}</strong><br>${escapeHtml(q.question)}<br><b>Your answer:</b> ${userText}<br><b>Correct answer:</b> ${correctText}</div>`;
+  }).join('');
+}
+
+function restartExam() {
+  $('result').classList.add('hidden');
+  $('instructions').classList.remove('hidden');
+  $('review').classList.add('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
